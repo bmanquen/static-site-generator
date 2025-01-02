@@ -22,7 +22,6 @@ class TestTextNode(unittest.TestCase):
         self.assertIsNotNone(node.url)
 
     def test_testtype_enum(self):
-        enums = list(TextType)
         with self.assertRaises(AttributeError):
             node = TextNode("this is a test", TextType.FAKE)
 
