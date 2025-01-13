@@ -30,3 +30,7 @@ class TestHTMLNode(unittest.TestCase):
             html_node.__repr__(),
             f"HTMLNode({html_node.tag}, {html_node.value}, [HTMLNode({html_child_node.tag}, {html_child_node.value}, {None}, {None})], {html_node.props})",
         )
+
+
+if __name__ == "__main__":
+    unittest.main()

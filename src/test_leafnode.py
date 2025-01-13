@@ -19,3 +19,7 @@ class TestLeafNode(unittest.TestCase):
             leaf_node.to_html(),
             f"<{leaf_node.tag}{leaf_node.props_to_html()}>{leaf_node.value}</{leaf_node.tag}>",
         )
+
+
+if __name__ == "__main__":
+    unittest.main()
