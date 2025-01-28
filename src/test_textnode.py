@@ -1,7 +1,7 @@
 import unittest
 
 from leafnode import LeafNode
-from textnode import TextNode, TextType
+from textnode import TextType, TextNode, text_node_to_html_node
 
 
 class TestTextNode(unittest.TestCase):
@@ -30,7 +30,7 @@ class TestTextNode(unittest.TestCase):
         text_node = TextNode("This is a text node", TextType.TEXT)
         leaf_node = LeafNode(None, "This is a text node")
         self.assertEqual(
-            TextNode.text_node_to_html_node(text_node).to_html(), leaf_node.to_html()
+            text_node_to_html_node(text_node).to_html(), leaf_node.to_html()
         )
 
     def test_text_node_to_html_node_image(self):
@@ -39,42 +39,42 @@ class TestTextNode(unittest.TestCase):
             "img", "", {"src": f"example.com", "alt": "This is a text node"}
         )
         self.assertEqual(
-            TextNode.text_node_to_html_node(text_node).to_html(), leaf_node.to_html()
+            text_node_to_html_node(text_node).to_html(), leaf_node.to_html()
         )
 
     def test_text_node_to_html_node_bold(self):
         text_node = TextNode("This is a text node", TextType.BOLD)
         leaf_node = LeafNode("b", "This is a text node")
         self.assertEqual(
-            TextNode.text_node_to_html_node(text_node).to_html(), leaf_node.to_html()
+            text_node_to_html_node(text_node).to_html(), leaf_node.to_html()
         )
 
     def test_text_node_to_html_node_italic(self):
         text_node = TextNode("This is a text node", TextType.ITALIC)
         leaf_node = LeafNode("i", "This is a text node")
         self.assertEqual(
-            TextNode.text_node_to_html_node(text_node).to_html(), leaf_node.to_html()
+            text_node_to_html_node(text_node).to_html(), leaf_node.to_html()
         )
 
     def test_text_node_to_html_node_code(self):
         text_node = TextNode("This is a text node", TextType.CODE)
         leaf_node = LeafNode("code", "This is a text node")
         self.assertEqual(
-            TextNode.text_node_to_html_node(text_node).to_html(), leaf_node.to_html()
+            text_node_to_html_node(text_node).to_html(), leaf_node.to_html()
         )
 
     def test_text_node_to_html_node_code(self):
         text_node = TextNode("This is a text node", TextType.LINK, "example.com")
         leaf_node = LeafNode("a", "This is a text node", {"href": "example.com"})
         self.assertEqual(
-            TextNode.text_node_to_html_node(text_node).to_html(), leaf_node.to_html()
+            text_node_to_html_node(text_node).to_html(), leaf_node.to_html()
         )
 
     def test_text_node_to_html_node_invalid(self):
 
         with self.assertRaises(Exception):
             text_node = TextNode("This is a text node", TextType.FAKE, "example.com")
-            TextNode.text_node_to_html_node(text_node)
+            text_node_to_html_node(text_node)
 
 
 if __name__ == "__main__":
