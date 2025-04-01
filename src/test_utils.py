@@ -1,14 +1,7 @@
 import unittest
 
 from textnode import TextNode, TextType
-from utils import (
-    extract_markdown_images,
-    extract_markdown_links,
-    split_nodes_delimiter,
-    split_nodes_image,
-    split_nodes_link,
-    text_to_textnodes,
-)
+from utils import *
 
 
 class TestUtils(unittest.TestCase):
@@ -216,3 +209,20 @@ class TestUtils(unittest.TestCase):
                 TextNode("link", TextType.LINK, "https://boot.dev"),
             ],
         )
+
+    def test_extract_title(self):
+        markdown = "# Hello"
+        title = extract_title(markdown)
+        self.assertEqual(title, "Hello")
+
+        markdown = """## hello
+
+        # This is a title
+        """
+        title = extract_title(markdown)
+        self.assertEqual(title, "This is a title")
+
+    def test_invalid_extract_title(self):
+        markdown = "## Hello"
+        with self.assertRaises(Exception):
+            extract_title(markdown)

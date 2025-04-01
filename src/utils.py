@@ -1,5 +1,6 @@
 import re
 
+from markdown_blocks import *
 from textnode import TextNode, TextType
 
 
@@ -88,7 +89,16 @@ def text_to_textnodes(text):
     new_nodes = [TextNode(text, TextType.TEXT)]
     new_nodes = split_nodes_delimiter(new_nodes, "**", TextType.BOLD)
     new_nodes = split_nodes_delimiter(new_nodes, "*", TextType.ITALIC)
+    new_nodes = split_nodes_delimiter(new_nodes, "_", TextType.ITALIC)
     new_nodes = split_nodes_delimiter(new_nodes, "`", TextType.CODE)
     new_nodes = split_nodes_link(new_nodes)
     new_nodes = split_nodes_image(new_nodes)
     return new_nodes
+
+
+def extract_title(markdown):
+    lines = markdown_to_blocks(markdown)
+    for line in lines:
+        if line.startswith("# "):
+            return line.split("# ")[1]
+    raise Exception("You must have at least 1 H1 header")
