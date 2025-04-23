@@ -1,5 +1,6 @@
 import os
 import shutil
+from pathlib import Path
 
 from markdown_to_html import *
 from textnode import *
@@ -43,35 +44,50 @@ func main(){
 ```"""
     )
     copy_contents("static", "public")
-    generate_page("content/index.md", "template.html", "public/index.html")
+    generate_pages_recursive("content", "template.html", "public")
 
 
 def copy_contents(source, destination):
     if os.path.exists(destination) and destination == "public":
         shutil.rmtree(destination)
-    files = os.listdir(source)
     os.mkdir(destination)
-    for file in files:
-        if os.path.isfile(f"{source}/{file}"):
-            dest = shutil.copy(f"{source}/{file}", f"{destination}/{file}")
+    for filename in os.listdir(source):
+        from_path = os.path.join(source, filename)
+        dest_path = os.path.join(destination, filename)
+        if os.path.isfile(from_path):
+            shutil.copy(from_path, dest_path)
         else:
-            dest = os.path.join(destination, file)
-            copy_contents(os.path.join(source, file), dest)
+            copy_contents(from_path, dest_path)
 
 
 def generate_page(from_path, template_path, dest_path):
-    print(f"Generating page from {from_path} to {dest_path} using {template_path}")
     markdown = open(from_path).read()
     template = open(template_path).read()
     html_string = markdown_to_html_node(markdown).to_html()
     title = extract_title(markdown)
 
-    html = template.replace("{{ Title }}", title)
-    html = template.replace("{{ Content }}", html_string)
+    template = template.replace("{{ Title }}", title)
+    template = template.replace("{{ Content }}", html_string)
 
-    os.makedirs(dest_path, exist_ok=True)
-    with open(dest_path[:-1], "w") as file:
-        file.write(html)
+    dest_dirs, file = os.path.split(dest_path)
+    dest_path = dest_path.replace(".md", ".html")
+    os.makedirs(dest_dirs, exist_ok=True)
+    with open(dest_path, "w") as file:
+        file.write(template)
+
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    files = os.listdir(dir_path_content)
+    for file in files:
+        if os.path.isfile(f"{dir_path_content}/{file}"):
+            generate_page(
+                f"{dir_path_content}/{file}", template_path, f"{dest_dir_path}/{file}"
+            )
+        else:
+            dest = os.path.join(dest_dir_path, file)
+            generate_pages_recursive(
+                os.path.join(dir_path_content, file), template_path, dest
+            )
 
 
 if __name__ == "__main__":

@@ -26,17 +26,15 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
 
 
 def extract_markdown_images(text):
-    images = re.findall(
-        r"\[(.*?)\]\((https:\/\/(?:\w+\.)*\w+\.\w{1,3}\/\w+\.\w{1,4})\)", text
-    )
-    return images
+    pattern = r"!\[([^\[\]]*)\]\(([^\(\)]*)\)"
+    matches = re.findall(pattern, text)
+    return matches
 
 
 def extract_markdown_links(text):
-    links = re.findall(
-        r"(?<!!)\[(.*?)\]\((https:\/\/(?:\w+\.)*\w+\.\w+\/?(?:.*?)*)\)", text
-    )
-    return links
+    pattern = r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)"
+    matches = re.findall(pattern, text)
+    return matches
 
 
 def split_nodes_image(old_nodes):
@@ -100,5 +98,5 @@ def extract_title(markdown):
     lines = markdown_to_blocks(markdown)
     for line in lines:
         if line.startswith("# "):
-            return line.split("# ")[1]
+            return line[2:]
     raise Exception("You must have at least 1 H1 header")
